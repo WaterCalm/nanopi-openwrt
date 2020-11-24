@@ -1,12 +1,13 @@
 name: r2s Lean版openwrt minimal 
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - '.github/workflows/r2s_lean_minimal.yml'
-  schedule:
-    - cron: '0 20 * * *'
+  #push:
+  #  branches: [ master ]
+  #  paths:
+  #    - '.github/workflows/r2s_lean_minimal.yml'
+  #schedule:
+  #  - cron: '0 20 * * *'
+  workflow_dispatch:
 
 jobs:
 
@@ -68,6 +69,12 @@ jobs:
           . x_assemble_artifact.sh
           release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
+      - name: Deliver firmware
+        uses: actions/upload-artifact@v2
+        with:
+          name:  ${{ steps.assemble_artifact.outputs.release_tag }}
+          path:  ./artifact.zip
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
